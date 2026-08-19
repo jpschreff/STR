@@ -1,0 +1,436 @@
+<title>Sierra Cash Flow Line</title>
+<style>
+:root{
+  --paper:#F1F3EE;
+  --paper-raised:#E7EAE3;
+  --ink:#1B2321;
+  --ink-soft:#4A5650;
+  --rule:#C7CDC3;
+  --lake:#1C5A6B;
+  --lake-soft:#DCEAEC;
+  --pine:#3B5D42;
+  --pine-soft:#E1E9DE;
+  --brass:#96692C;
+  --brass-soft:#F1E4CE;
+  --rust:#A14B34;
+  --rust-soft:#F3E1D9;
+  --shadow: 0 1px 0 rgba(27,35,33,0.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161A;
+    --paper-raised:#16201F;
+    --ink:#DEE6E1;
+    --ink-soft:#9FADA6;
+    --rule:#2B3733;
+    --lake:#7FC4D6;
+    --lake-soft:#16292C;
+    --pine:#8FBF97;
+    --pine-soft:#16221A;
+    --brass:#D9AE6C;
+    --brass-soft:#2B2113;
+    --rust:#E38F72;
+    --rust-soft:#2E1B15;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161A;
+  --paper-raised:#16201F;
+  --ink:#DEE6E1;
+  --ink-soft:#9FADA6;
+  --rule:#2B3733;
+  --lake:#7FC4D6;
+  --lake-soft:#16292C;
+  --pine:#8FBF97;
+  --pine-soft:#16221A;
+  --brass:#D9AE6C;
+  --brass-soft:#2B2113;
+  --rust:#E38F72;
+  --rust-soft:#2E1B15;
+}
+
+*{box-sizing:border-box;}
+html{background:var(--paper);}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Spectral', Georgia, 'Times New Roman', serif;
+  font-size:17px;
+  line-height:1.6;
+}
+.wrap{max-width:840px;margin:0 auto;padding:0 24px 120px;}
+
+/* ---------- Type ---------- */
+h1,h2,h3,.display{
+  font-family:'Big Shoulders Display','Archivo Narrow',sans-serif;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.01em;
+  text-wrap:balance;
+  color:var(--ink);
+}
+.mono, .num, table{
+  font-family:'IBM Plex Mono', ui-monospace, monospace;
+  font-variant-numeric:tabular-nums;
+}
+.eyebrow{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--lake);
+}
+p{max-width:66ch;}
+a{color:var(--lake);}
+
+/* ---------- Header / hero ---------- */
+.masthead{
+  padding:56px 0 28px;
+  border-bottom:3px solid var(--ink);
+}
+.masthead .eyebrow{margin-bottom:10px;display:block;}
+.masthead h1{
+  font-size:clamp(40px,7vw,64px);
+  line-height:0.98;
+  margin:0 0 14px;
+}
+.masthead .sub{
+  font-family:'Spectral',serif;
+  font-style:italic;
+  color:var(--ink-soft);
+  font-size:19px;
+  max-width:60ch;
+  margin:0;
+}
+.meta-row{
+  display:flex;
+  gap:28px;
+  flex-wrap:wrap;
+  margin-top:24px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12.5px;
+  color:var(--ink-soft);
+}
+.meta-row div span{display:block;color:var(--ink);font-size:14px;margin-top:2px;}
+
+/* ---------- Waypoint sections ---------- */
+.waypoint{
+  display:flex;
+  gap:18px;
+  align-items:baseline;
+  margin:64px 0 20px;
+}
+.waypoint .no{
+  font-family:'Big Shoulders Display',sans-serif;
+  font-size:15px;
+  font-weight:700;
+  color:var(--paper);
+  background:var(--ink);
+  border-radius:2px;
+  padding:3px 9px;
+  letter-spacing:0.04em;
+  flex-shrink:0;
+}
+.waypoint h2{font-size:clamp(24px,4vw,32px);margin:0;}
+
+section{margin-bottom:8px;}
+
+/* ---------- Callout / KPI strip ---------- */
+.strip{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px;
+  background:var(--rule);
+  border:1px solid var(--rule);
+  margin:22px 0 30px;
+}
+.strip .cell{
+  background:var(--paper-raised);
+  padding:16px 16px 14px;
+}
+.strip .cell .k{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  display:block;
+  margin-bottom:6px;
+}
+.strip .cell .v{
+  font-family:'Big Shoulders Display',sans-serif;
+  font-size:26px;
+  font-weight:700;
+  color:var(--lake);
+  line-height:1;
+}
+.strip .cell .v.brass{color:var(--brass);}
+.strip .cell .v.rust{color:var(--rust);}
+.strip .cell .v.pine{color:var(--pine);}
+
+/* ---------- Note / warning boxes ---------- */
+.note{
+  border-left:3px solid var(--lake);
+  background:var(--lake-soft);
+  padding:14px 18px;
+  margin:22px 0;
+  font-size:15.5px;
+}
+.note.warn{border-left-color:var(--rust);background:var(--rust-soft);}
+.note.good{border-left-color:var(--pine);background:var(--pine-soft);}
+.note strong{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:6px;}
+
+/* ---------- Tables ---------- */
+.tbl-wrap{overflow-x:auto;margin:18px 0 30px;border:1px solid var(--rule);}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:560px;}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--rule);white-space:nowrap;}
+th{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  background:var(--paper-raised);
+  font-weight:500;
+}
+td.wrap-cell{white-space:normal;font-family:'Spectral',serif;font-size:14.5px;}
+tr:last-child td{border-bottom:none;}
+td.num, th.num{text-align:right;}
+.status{
+  display:inline-block;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  letter-spacing:0.03em;
+  padding:2px 7px;
+  border-radius:2px;
+}
+.status.open{background:var(--pine-soft);color:var(--pine);}
+.status.tight{background:var(--brass-soft);color:var(--brass);}
+.status.closed{background:var(--rust-soft);color:var(--rust);}
+
+/* ---------- Screening funnel ---------- */
+.funnel-item{
+  display:grid;
+  grid-template-columns:120px 1fr;
+  gap:16px;
+  padding:14px 0;
+  border-bottom:1px solid var(--rule);
+  align-items:start;
+}
+.funnel-item:last-child{border-bottom:none;}
+.funnel-item .place{font-family:'Big Shoulders Display',sans-serif;font-weight:700;font-size:16px;}
+.funnel-item .verdict{font-family:'IBM Plex Mono',monospace;font-size:11.5px;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:4px;display:block;}
+.funnel-item.out .verdict{color:var(--rust);}
+.funnel-item.out .place{color:var(--ink-soft);text-decoration:line-through;text-decoration-color:var(--rust);text-decoration-thickness:1.5px;}
+.funnel-item.in .verdict{color:var(--pine);}
+.funnel-item .why{font-size:14.5px;color:var(--ink-soft);margin:0;max-width:56ch;}
+
+/* ---------- Checklist ---------- */
+.checklist{list-style:none;margin:16px 0 30px;padding:0;}
+.checklist li{
+  display:flex;
+  gap:12px;
+  padding:10px 0;
+  border-bottom:1px solid var(--rule);
+  font-size:15px;
+}
+.checklist li:last-child{border-bottom:none;}
+.checklist .box{
+  flex-shrink:0;
+  width:16px;height:16px;
+  margin-top:4px;
+  border:1.5px solid var(--ink-soft);
+  border-radius:2px;
+}
+.checklist b{font-family:inherit;}
+
+/* ---------- Timeline ---------- */
+.tl{border-left:2px solid var(--rule);margin:20px 0 30px;padding-left:22px;}
+.tl-item{position:relative;padding-bottom:26px;}
+.tl-item:last-child{padding-bottom:0;}
+.tl-item::before{
+  content:"";
+  position:absolute;left:-28px;top:4px;
+  width:10px;height:10px;border-radius:50%;
+  background:var(--lake);border:2px solid var(--paper);
+  outline:2px solid var(--lake);
+}
+.tl-item .when{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--lake);letter-spacing:0.04em;text-transform:uppercase;}
+.tl-item .what{margin:3px 0 0;font-size:15.5px;}
+
+footer{
+  margin-top:70px;
+  padding-top:20px;
+  border-top:1px solid var(--rule);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px;
+  color:var(--ink-soft);
+}
+</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<div class="wrap">
+
+<div class="masthead">
+  <span class="eyebrow">Tax-Advantaged STR Acquisition &mdash; Working Analysis</span>
+  <h1>The Sierra<br>Cash Flow Line</h1>
+  <p class="sub">Where a Bay-Area-drivable short-term rental can clear the STR loophole, survive OBBBA's fine print, and still come close to paying for itself.</p>
+  <div class="meta-row">
+    <div>Prepared for<span>San Carlos household &middot; $1.6M K-1 income</span></div>
+    <div>Budget<span>$1.6M&ndash;$2.0M purchase, $400K down</span></div>
+    <div>Placed in service<span>Must close &amp; list by 12/31/2026</span></div>
+    <div>Material participant<span>Spouse (co-host of record)</span></div>
+  </div>
+</div>
+
+<div class="waypoint"><span class="no">01</span><h2>What the deduction actually is</h2></div>
+<p>Two separate provisions have to stack for this to work, and both are narrower than the internet version.</p>
+
+<div class="note">
+<strong>Bonus depreciation (OBBBA / §168(k))</strong>
+The building shell itself depreciates over 27.5&ndash;39 years no matter what &mdash; bonus depreciation never touches it. What bonus depreciation hits is the slice of the purchase price a <b>cost segregation study</b> reclassifies into 5-, 7-, and 15-year property: furniture, appliances, decking, hot tub, landscaping, fencing, driveway, portions of electrical tied to those assets. OBBBA made 100% bonus permanent for property placed in service after 1/19/2025 &mdash; that reclassified slice is fully deductible the year the property goes into service, not spread over its class life.
+</div>
+
+<div class="note">
+<strong>The STR loophole (§469 / Reg. 1.469-1T(e)(3)(ii))</strong>
+A rental where the <b>average guest stay is 7 days or less</b> isn't a "rental activity" under the passive-loss rules by default &mdash; it's tested for material participation like any other business. If either spouse clears a material-participation test (the workable one here: your wife spends more than 100 hours on it <i>and</i> more than anyone else, including any cleaner or manager), the loss is <b>non-passive</b>. That means it offsets W-2, K-1, and other ordinary income directly, with no $25K passive-loss cap and no need for Real Estate Professional status.
+</div>
+
+<div class="strip">
+  <div class="cell"><span class="k">Illustrative purchase</span><span class="v">$1.6M</span></div>
+  <div class="cell"><span class="k">Building basis (75%)</span><span class="v">$1.2M</span></div>
+  <div class="cell"><span class="k">Cost-seg eligible (~25%)</span><span class="v brass">$300K</span></div>
+  <div class="cell"><span class="k">Year-1 federal savings @ 37%</span><span class="v pine">~$111K</span></div>
+</div>
+
+<div class="note warn">
+<strong>The catch nobody mentions: California doesn't conform</strong>
+CA has not adopted federal §168(k) bonus depreciation. You get the full federal deduction on your 1040 &mdash; but on your CA 540 that same $300K gets added back and depreciated on the normal schedule instead, over the asset's real class life. The $111K estimate above is a <b>federal-only</b> number. Model the CA side as a multi-year benefit, not a year-one one. This is also exactly why the K-1/STR combination matters: your CA tax bill barely moves, but your federal bill &mdash; where the 37% bracket lives &mdash; moves a lot.
+</div>
+
+<div class="note">
+<strong>Excess business loss limit (§461(l), now permanent under OBBBA)</strong>
+2026 MFJ threshold is $512,000 of net business loss deductible against other income in one year; the rest carries forward as an NOL. At your income level this almost certainly doesn't bind &mdash; a $300&ndash;375K STR loss nets against $1.6M of positive K-1 business income, so you never show an aggregate business <i>loss</i> in the first place. Confirm with your CPA that the K-1 income is characterized as trade-or-business income (not portfolio/investment income from a fund that isn't itself a trade or business) &mdash; that's the one fact that would change this.
+</div>
+
+<div class="note">
+<strong>What material participation looks like in practice</strong>
+Have your wife be the account holder / co-host of record, personally handle guest messaging, pricing, and booking decisions, and keep a contemporaneous log &mdash; dates, hours, task. A full-service property manager who runs pricing and guest comms can put <i>their</i> hours ahead of hers on the "more than anyone else" test and quietly unwind the whole structure. Local cleaner/turnover crew only, self- or co-hosted booking &mdash; that's the setup this plan assumes. Year one is the easiest year to clear the hours bar, since furnishing, setup, systems, and listing creation all count.
+</div>
+
+<div class="waypoint"><span class="no">02</span><h2>Screening the drivable ring</h2></div>
+<p>"Drivable from the Bay Area" and "STR-legal in 2026" turn out to be the real filter &mdash; most of the classic weekend-house markets within 4 hours are now capped, waitlisted, or effectively closed to a new buyer this year. Screened against a same-day-drive radius (~4 hrs from San Carlos):</p>
+
+<div class="tbl-wrap">
+<div class="funnel-item out">
+  <div><span class="place">Town of Truckee</span></div>
+  <div><span class="verdict">Screened out</span><p class="why">Town-wide cap of 1,255 permits already reached; new-owner waitlist plus a mandatory 365-day wait after any sale before you can even apply. Dead end for a 2026 placed-in-service date.</p></div>
+</div>
+<div class="funnel-item out">
+  <div><span class="place">Douglas Co., NV (Zephyr Cove / Kingsbury)</span></div>
+  <div><span class="verdict">Screened out</span><p class="why">Township-wide cap of 600, ~44 permits left as of last count, and several sub-neighborhoods (Kingsbury Heights, Zephyr Heights) already full. Permits are non-transferable and expire at sale &mdash; you'd be buying a lottery ticket, not a business.</p></div>
+</div>
+<div class="funnel-item out">
+  <div><span class="place">Russian River (Guerneville / Monte Rio)</span></div>
+  <div><span class="verdict">Screened out</span><p class="why">Sonoma County's density-based cap and R1 zoning exclusions have effectively blocked new vacation-rental permits across most of the lower Russian River. Closest market to the Bay Area, but functionally closed to a new entrant.</p></div>
+</div>
+<div class="funnel-item out">
+  <div><span class="place">Pinecrest / Twain Harte corridor</span></div>
+  <div><span class="verdict">Screened out</span><p class="why">Pinecrest itself sits on Forest Service land with tight rental restrictions; the broader Hwy-108 corridor is real but thinner on demand data and further from a ski/lake anchor that drives ADR.</p></div>
+</div>
+<div class="funnel-item in">
+  <div><span class="place">North Lake Tahoe &mdash; unincorporated Placer Co. (Kings Beach, Tahoe Vista, Carnelian Bay, Homewood)</span></div>
+  <div><span class="verdict">Shortlisted</span><p class="why">County-wide cap of 3,900 with roughly 300 still open as of mid-2026 &mdash; the largest headroom of any capped market in range. Dual ski (Palisades, Northstar) and summer-lake season. ~3h15&ndash;3h30 via I-80.</p></div>
+</div>
+<div class="funnel-item in">
+  <div><span class="place">South Lake Tahoe, CA (El Dorado Co.)</span></div>
+  <div><span class="verdict">Shortlisted</span><p class="why">Residential-zone cap of 900, roughly 300 remaining as of mid-2026 under the new ordinance (verify current count with the city before writing an offer &mdash; it moves weekly). Deepest inventory and best comp data of any market in range, but also the most listing-saturated: occupancy was down ~9% YoY even as ADR rose. ~3h45&ndash;4h via I-80/US-50.</p></div>
+</div>
+<div class="funnel-item in">
+  <div><span class="place">Incline Village / Crystal Bay, NV (Washoe Co.)</span></div>
+  <div><span class="verdict">Shortlisted, higher risk/reward</span><p class="why">No published hard-number cap &mdash; regulated instead by occupancy tier plus parking/septic/defensible-space constraints, so eligibility is parcel-specific and must be confirmed with the county before you're in contract. Thinner supply than either South or North Shore, higher average home values, no NV state income tax (irrelevant to your CA liability, but one less return). ~3h30 via I-80/Hwy-267.</p></div>
+</div>
+</div>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Sub-market</th><th>Permit status (2026)</th><th class="num">Drive time</th><th class="num">Approx. property tax</th></tr></thead>
+<tbody>
+<tr><td class="wrap-cell">North Lake Tahoe (Placer Co.)</td><td><span class="status open">~300 of 3,900 open</span></td><td class="num">3h15&ndash;3h30</td><td class="num">~1.2% CA</td></tr>
+<tr><td class="wrap-cell">South Lake Tahoe (El Dorado Co.)</td><td><span class="status tight">~300 of 900 open, confirm live</span></td><td class="num">3h45&ndash;4h</td><td class="num">~1.2% CA</td></tr>
+<tr><td class="wrap-cell">Incline Village / Crystal Bay (Washoe Co., NV)</td><td><span class="status tight">Parcel-specific, no hard cap</span></td><td class="num">~3h30</td><td class="num">~0.6&ndash;0.8% NV</td></tr>
+<tr><td class="wrap-cell">Town of Truckee</td><td><span class="status closed">Cap reached, 365-day wait</span></td><td class="num">3h15</td><td class="num">&mdash;</td></tr>
+<tr><td class="wrap-cell">Douglas Co., NV (Zephyr Cove/Kingsbury)</td><td><span class="status closed">~44 of 600 left, several zones full</span></td><td class="num">3h45</td><td class="num">&mdash;</td></tr>
+<tr><td class="wrap-cell">Russian River (Sonoma Co.)</td><td><span class="status closed">New permits effectively blocked</span></td><td class="num">1h30</td><td class="num">&mdash;</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="waypoint"><span class="no">03</span><h2>Does it actually cash flow?</h2></div>
+<p>Modeled at 7.5% on a 30-year second-home mortgage, self/co-hosted (no full-service PM fee &mdash; see the material-participation note above), opex at ~28% of gross revenue. Revenue ranges reflect a well-positioned 4&ndash;5BR, hot-tub, near-lake/view property in each market's upper quartile &mdash; pull a live AirDNA/PriceLabs comp report on the actual parcel before you rely on these.</p>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Scenario</th><th class="num">Fixed cost*</th><th class="num">Revenue: base</th><th class="num">Op. cash flow: base</th><th class="num">Revenue: upside</th><th class="num">Op. cash flow: upside</th></tr></thead>
+<tbody>
+<tr><td class="wrap-cell">$1.6M / 25% down &mdash; South Lake Tahoe</td><td class="num">$127.9K</td><td class="num">$130K</td><td class="num rust">&minus;$34.3K</td><td class="num">$190K</td><td class="num pine">+$8.9K</td></tr>
+<tr><td class="wrap-cell">$1.6M / 25% down &mdash; North Lake Tahoe</td><td class="num">$127.9K</td><td class="num">$140K</td><td class="num rust">&minus;$27.1K</td><td class="num">$200K</td><td class="num pine">+$16.1K</td></tr>
+<tr><td class="wrap-cell">$1.6M / 25% down &mdash; Incline Village</td><td class="num">$120.1K</td><td class="num">$150K</td><td class="num rust">&minus;$12.1K</td><td class="num">$220K</td><td class="num pine">+$38.3K</td></tr>
+<tr><td class="wrap-cell">$2.0M / 20% down &mdash; South/North Lake Tahoe</td><td class="num">$168.2K</td><td class="num">$150K</td><td class="num rust">&minus;$60.2K</td><td class="num">$220K</td><td class="num rust">&minus;$9.8K</td></tr>
+<tr><td class="wrap-cell">$2.0M / 20% down &mdash; Incline Village</td><td class="num">$158.2K</td><td class="num">$165K</td><td class="num rust">&minus;$34.2K</td><td class="num">$235K</td><td class="num pine">+$11.9K</td></tr>
+</tbody>
+</table>
+</div>
+<p style="font-size:13px;color:var(--ink-soft);max-width:70ch;">*Fixed cost = P&amp;I + property tax + insurance. Excludes opex (utilities, supplies, snow removal, platform fees, maintenance reserve), which is netted into the cash-flow columns at ~28% of gross revenue.</p>
+
+<div class="note good">
+<strong>The finding that should drive the decision</strong>
+Stretching to the $2.0M/20%-down tier does <i>not</i> pay for itself &mdash; the extra $400K of debt service outruns the extra revenue a bigger house commands, even at the upside case. The $1.6M/25%-down tier gets meaningfully closer to breakeven at every market, and Incline Village's lower property tax and thinner supply get it closest of all. Put the $400K to work as a bigger down payment on a cheaper, better-positioned house rather than the down payment on a more expensive one.
+</div>
+
+<div class="note">
+<strong>How the tax shield actually functions here</strong>
+None of the scenarios above are reliably operating-cash-flow-positive in year one. The ~$111&ndash;140K federal tax savings from bonus depreciation isn't a rounding error on top of that &mdash; it's the thing that converts a $10&ndash;35K/year operating shortfall into a strongly cash-positive year one, deliverable in practice as a reduced Q3/Q4 2026 estimated payment once the cost seg study and CPA confirm the number. From year two on, the deduction is much smaller (ordinary straight-line only), so the property needs to stand closer to its own two feet &mdash; which is exactly why the sub-market and property selection below still matter more than the depreciation math, which is roughly proportional to price everywhere in Tahoe.
+</div>
+
+<div class="waypoint"><span class="no">04</span><h2>What to screen for in an individual property</h2></div>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Criterion</th><th>Why it moves the numbers</th></tr></thead>
+<tbody>
+<tr><td class="wrap-cell"><b>Under-cap headroom confirmed same week as offer</b></td><td class="wrap-cell">Call the county/city the week you write the offer, not the week you opened the listing &mdash; these counts move weekly and permits do not transfer at sale in any market on the shortlist.</td></tr>
+<tr><td class="wrap-cell"><b>Structural ADR premium: ski-in/ski-out, lake access/dock, or walk-to-beach</b></td><td class="wrap-cell">These are the features that produce revenue-per-dollar-of-price disproportionate to purchase price &mdash; the actual lever for closing the cash-flow gap, since the depreciation shield is roughly flat per dollar spent everywhere.</td></tr>
+<tr><td class="wrap-cell"><b>Sleeps 10&ndash;14 (4&ndash;5BR + bunk/loft space)</b></td><td class="wrap-cell">Group-house capacity is the segment commanding the top-decile revenue numbers cited above; smaller units get bid down to the market-average $45&ndash;55K/year figure.</td></tr>
+<tr><td class="wrap-cell"><b>No HOA rental restriction or STR-hostile CC&amp;Rs</b></td><td class="wrap-cell">Some Tahoe Donner-style associations layer their own STR rules and fines on top of the county permit &mdash; a second approval you can lose independently of the county cap.</td></tr>
+<tr><td class="wrap-cell"><b>Insurable at a normal market rate, not CA FAIR Plan</b></td><td class="wrap-cell">Get an insurance quote during diligence, not after close &mdash; wildfire-zone insurer pullback in the Tahoe basin is real and can add $5&ndash;10K/year or force a wrap policy.</td></tr>
+<tr><td class="wrap-cell"><b>Land value share on the county assessor card</b></td><td class="wrap-cell">A lower land allocation (more of the price in the structure) means more basis is eligible for cost segregation and bonus depreciation &mdash; a genuinely comparable-quality house with a smaller lot can produce a bigger Year-1 deduction.</td></tr>
+<tr><td class="wrap-cell"><b>Turnkey-furnished or a realistic furnishing budget</b></td><td class="wrap-cell">Furniture, appliances, and decor are exactly the cost-seg-eligible bucket &mdash; a gutted or unfurnished house needs real capital added to the depreciable basis before it can produce the deduction modeled above.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="waypoint"><span class="no">05</span><h2>Timeline to a 2026 placed-in-service date</h2></div>
+<p>Today is August 19, 2026. "Placed in service" means available and listed for rent, not necessarily already booked &mdash; but permit turnaround and furnishing still take real weeks, and every one of the shortlisted markets requires a fresh permit application after closing.</p>
+<div class="tl">
+  <div class="tl-item"><span class="when">Now &ndash; Early Sept</span><p class="what">Engage a Tahoe-specialist buyer's agent and a cost segregation firm in parallel; confirm live permit counts in all three shortlisted sub-markets; get pre-approved for a second-home loan sized to the $1.6M tier.</p></div>
+  <div class="tl-item"><span class="when">Sept</span><p class="what">Offer and go under contract. Where the local custom supports it, make the offer contingent on confirming the specific parcel's STR-permit eligibility before removing contingencies.</p></div>
+  <div class="tl-item"><span class="when">Oct</span><p class="what">Close escrow. File the STR permit application the same week as closing &mdash; this is usually the longest pole in the tent.</p></div>
+  <div class="tl-item"><span class="when">Oct &ndash; Nov</span><p class="what">Furnish and set up (these costs land in the cost-seg-eligible bucket); order the cost segregation study once furnishing is substantially complete; set up the listing with your wife as host/co-host of record.</p></div>
+  <div class="tl-item"><span class="when">By Dec 31</span><p class="what">Property listed and available to book &mdash; placed in service for 2026. Begin the contemporaneous hours log immediately, not retroactively.</p></div>
+  <div class="tl-item"><span class="when">Q1 2027</span><p class="what">CPA finalizes the cost segregation allocation and federal bonus depreciation figure on the 2026 return; true up estimated payments.</p></div>
+</div>
+
+<div class="waypoint"><span class="no">06</span><h2>Before you act on any of this</h2></div>
+<ul class="checklist">
+<li><span class="box"></span><div><b>This is a modeling framework, not a listing search.</b> I don't have access to live MLS inventory &mdash; once you have candidate addresses, send them over and I can pencil the actual numbers against this model.</div></li>
+<li><span class="box"></span><div><b>Confirm the K-1 income's character with your CPA</b> before relying on the §461(l) analysis &mdash; the aggregation only works cleanly if it's trade-or-business income.</div></li>
+<li><span class="box"></span><div><b>Order the cost segregation study from a firm that does engineering-based studies</b>, not a percentage-estimate mill &mdash; the IRS has specifically flagged low-quality STR cost seg studies for audit scrutiny.</div></li>
+<li><span class="box"></span><div><b>Recapture is real.</b> Bonus depreciation is accelerated, not free &mdash; selling before death or a 1031 exchange triggers unrecaptured §1250 gain on everything you deducted. Plan the hold period accordingly.</div></li>
+<li><span class="box"></span><div><b>Re-verify every permit count and insurance assumption at time of offer</b> &mdash; every number in this document is a snapshot as of mid-2026 and several of these programs are moving targets.</div></li>
+</ul>
+
+<footer>Working analysis &middot; not tax, legal, or investment advice &middot; verify all figures with a CPA licensed in CA/NV and a local buyer's agent before writing an offer.</footer>
+
+</div>
